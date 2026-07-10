@@ -30,11 +30,11 @@
   "identifier": "io.github.clash-verge-rev.clash-verge-rev",
   "plugins": {
     "updater": {
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEQyOEMyRjBCQkVGOUJEREYKUldUZnZmbStDeStNMHU5Mmo1N24xQXZwSVRYbXA2NUpzZE5oVzlqeS9Bc0t6RVV4MmtwVjBZaHgK",
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDY0NDZCQ0I2MUI0QzNCRjIKUldUeU8wd2J0cnhHWkxCeHM3V01HR1RxaEtIeWJpamJuUFBSeit5Vm5NQ2EwcE52RWxPNkx3SHQK",
       "endpoints": [
-        "https://update.hwdns.net/https://github.com/clash-verge-rev/clash-verge-rev/releases/download/updater/update-proxy.json",
-        "https://gh-proxy.org/https://github.com/clash-verge-rev/clash-verge-rev/releases/download/updater/update-proxy.json",
-        "https://github.com/clash-verge-rev/clash-verge-rev/releases/download/updater/update.json"
+        "https://update.hwdns.net/https://github.com/TWO666/clash-verge-rev/releases/download/updater/update-proxy.json",
+        "https://gh-proxy.org/https://github.com/TWO666/clash-verge-rev/releases/download/updater/update-proxy.json",
+        "https://github.com/TWO666/clash-verge-rev/releases/download/updater/update.json"
       ],
       "windows": {
         "installMode": "passive"
