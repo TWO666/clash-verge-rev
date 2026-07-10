@@ -3,11 +3,29 @@ use clash_verge_logging::{Type, logging};
 use super::use_lowercase;
 use serde_yaml_ng::{self, Mapping, Value};
 
+/// 这些字段的value是一个由用户自定义命名的字典
+/// （key 是域名/规则集名字/节点池名字等，不是 mihomo 自身的 schema 字段名），
+/// 语义上应该"整体替换"，而不是逐 key 深度合并。
+const WHOLE_REPLACE_KEYS: &[&str] = &[
+    "nameserver-policy", // dns.nameserver-policy: 域名 -> 服务器
+    "hosts",             // dns.hosts / 顶层 hosts: 域名 -> IP
+    "rule-providers",    // 规则集名字 -> 定义
+    "proxy-providers",   // 节点池名字 -> 定义
+    "sub-rules",         // 子规则集合名字 -> 规则列表
+];
+
 fn deep_merge(a: &mut Value, b: Value) {
     match (a, b) {
         (Value::Mapping(a_map), Value::Mapping(b_map)) => {
             for (key, value) in b_map {
-                if let Some(existing) = a_map.get_mut(&key) {
+                let whole_replace = key
+                    .as_str()
+                    .map(|k| WHOLE_REPLACE_KEYS.contains(&k))
+                    .unwrap_or(false);
+
+                if whole_replace {
+                    a_map.insert(key, value); // 不递归，直接整体替换
+                } else if let Some(existing) = a_map.get_mut(&key) {
                     deep_merge(existing, value);
                 } else {
                     a_map.insert(key, value);
