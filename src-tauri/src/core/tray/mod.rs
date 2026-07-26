@@ -208,7 +208,8 @@ impl Tray {
         let verge = Config::verge().await.latest_arc();
         let system_proxy = verge.enable_system_proxy.as_ref().unwrap_or(&false);
         let tun_mode = verge.enable_tun_mode.as_ref().unwrap_or(&false);
-        let tun_mode_available = is_current_app_handle_admin(app_handle) || service::is_service_available().await;
+        let tun_mode_available =
+            is_current_app_handle_admin(app_handle) || service::is_service_available().await.is_ok();
         let mode = {
             Config::clash()
                 .await
@@ -993,7 +994,7 @@ fn on_menu_event(_: &AppHandle, event: MenuEvent) {
                 let _ = help::open_app_latest_log();
             }
             MenuIds::CORE_LOG => {
-                let _ = help::open_core_latest_log().await;
+                let _ = help::open_core_latest_log();
             }
             MenuIds::RESTART_CLASH => feat::restart_clash_core().await,
             MenuIds::RESTART_APP => feat::restart_app().await,

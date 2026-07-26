@@ -1,12 +1,16 @@
+use std::sync::atomic::{AtomicBool, Ordering};
+
 use clash_verge_logging::{Type, logging};
 use tokio::signal::unix::{SignalKind, signal};
 
-use crate::{RUNTIME, SHUTDOWN_LATCH, ShutdownOutcome};
+use crate::RUNTIME;
+
+static IS_CLEANING_UP: AtomicBool = AtomicBool::new(false);
 
 pub fn register<F, Fut>(f: F)
 where
     F: Fn() -> Fut + Send + Sync + 'static,
-    Fut: Future<Output = ShutdownOutcome> + Send + 'static,
+    Fut: Future + Send + 'static,
 {
     if let Some(Some(rt)) = RUNTIME.get() {
         rt.spawn(async move {
@@ -49,7 +53,7 @@ where
                     }
                 }
 
-                if !SHUTDOWN_LATCH.try_begin() {
+                if IS_CLEANING_UP.load(Ordering::SeqCst) {
                     logging!(
                         info,
                         Type::SystemSignal,
@@ -58,9 +62,11 @@ where
                     );
                     continue;
                 }
+                IS_CLEANING_UP.store(true, Ordering::SeqCst);
+
                 logging!(info, Type::SystemSignal, "Caught signal {}", signal_name);
 
-                SHUTDOWN_LATCH.finish(f().await);
+                f().await;
             }
         });
     } else {

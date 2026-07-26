@@ -132,7 +132,7 @@ const ProxyControlSwitches = ({
   const { t } = useTranslation()
   const { verge, mutateVerge, patchVerge } = useVerge()
   const { installServiceAndRestartCore } = useServiceInstaller()
-  const { uninstallServiceAndStartSidecar } = useServiceUninstaller()
+  const { uninstallServiceAndRestartCore } = useServiceUninstaller()
   const { indicator: systemProxyIndicator, toggleSystemProxy } =
     useSystemProxyState()
   const { isServiceOk, isTunModeAvailable, mutateSystemState } =
@@ -169,7 +169,11 @@ const ProxyControlSwitches = ({
 
   const onUninstallService = useLockFn(async () => {
     try {
-      await uninstallServiceAndStartSidecar()
+      if (verge?.enable_tun_mode) {
+        await handleTunToggle(false)
+      }
+      await uninstallServiceAndRestartCore()
+      await mutateSystemState()
     } catch (err) {
       showNotice.error(err)
     }
