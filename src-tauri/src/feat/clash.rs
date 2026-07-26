@@ -57,7 +57,10 @@ pub async fn restart_app() {
 
     if !cleanup_result.core_stopped {
         handle::Handle::global().clear_is_exiting();
-        handle::Handle::notice_message("app_restart::core_stop_failed", "");
+        handle::Handle::notice_message(
+            "set_config::error",
+            "Failed to stop the core safely; restart was cancelled",
+        );
         return;
     }
 

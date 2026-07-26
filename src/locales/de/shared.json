@@ -23,8 +23,7 @@
     "closeAll": "Alle schließen",
     "clear": "Löschen",
     "previous": "Previous",
-    "next": "Next",
-    "check": "Prüfen"
+    "next": "Next"
   },
   "labels": {
     "updateAt": "Aktualisiert am",
@@ -45,8 +44,7 @@
     "enabled": "Aktiviert",
     "disabled": "Deaktiviert",
     "saving": "Saving...",
-    "empty": "Leer",
-    "loading": "Wird geladen..."
+    "empty": "Leer"
   },
   "units": {
     "milliseconds": "Millisekunden",
@@ -76,14 +74,6 @@
   },
   "feedback": {
     "errors": {
-      "unexpected": "Etwas ist schiefgelaufen",
-      "label": "Fehler",
-      "unknown": "Unbekannter Fehler",
-      "details": "Fehlerdetails",
-      "stack": "Fehler-Stack",
-      "componentStack": "Komponenten-Stack",
-      "trafficUnavailable": "Traffic-Daten nicht verfügbar",
-      "operationFailed": "Der Vorgang ist fehlgeschlagen",
       "trafficStats": "Traffic Statistics Error",
       "trafficStatsDescription": "The traffic statistics component encountered an error and has been disabled to prevent crashes."
     },

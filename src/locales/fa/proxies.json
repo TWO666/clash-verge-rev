@@ -25,8 +25,7 @@
     },
     "labels": {
       "proxyCount": "Proxy Count",
-      "delayCheckReset": "بررسی تأخیر برای لغو ثابت",
-      "nodeCount": "{{count}} نود"
+      "delayCheckReset": "بررسی تأخیر برای لغو ثابت"
     },
     "tooltips": {
       "locate": "موقعیت",
@@ -41,10 +40,6 @@
     },
     "placeholders": {
       "delayCheckUrl": "آدرس بررسی تأخیر"
-    },
-    "empty": {
-      "noAvailableGroups": "هیچ گروه پروکسی در دسترس نیست",
-      "noProxies": "پروکسی‌ای وجود ندارد"
     },
     "chain": {
       "header": "Chain Proxy Config",

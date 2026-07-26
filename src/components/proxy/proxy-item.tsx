@@ -10,7 +10,6 @@ import {
   type SxProps,
   type Theme,
 } from '@mui/material'
-import { useTranslation } from 'react-i18next'
 
 import { BaseLoading } from '@/components/base'
 import { useProxyDelayState } from '@/hooks/use-proxy-delay-state'
@@ -50,7 +49,6 @@ const TypeBox = styled('span')(({ theme }) => ({
 }))
 
 export const ProxyItem = (props: Props) => {
-  const { t } = useTranslation()
   const { group, member, selected, showType = true, sx, onClick } = props
   const details = memberDetails(member)
   const unresolved = member.kind === 'unresolved'
@@ -162,7 +160,7 @@ export const ProxyItem = (props: Props) => {
                 ':hover': { bgcolor: alpha(palette.primary.main, 0.15) },
               })}
             >
-              {t('shared.actions.check')}
+              Check
             </Widget>
           )}
 

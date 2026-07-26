@@ -25,8 +25,7 @@
     },
     "labels": {
       "proxyCount": "Proxy Count",
-      "delayCheckReset": "Delay check to cancel fixed",
-      "nodeCount": "{{count}} nodes"
+      "delayCheckReset": "Delay check to cancel fixed"
     },
     "tooltips": {
       "locate": "locate",
@@ -41,10 +40,6 @@
     },
     "placeholders": {
       "delayCheckUrl": "Delay check URL"
-    },
-    "empty": {
-      "noAvailableGroups": "No proxy groups are available",
-      "noProxies": "No proxies"
     },
     "chain": {
       "header": "Chain Proxy Config",

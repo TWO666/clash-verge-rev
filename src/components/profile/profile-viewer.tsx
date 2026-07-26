@@ -91,11 +91,9 @@ export function ProfileViewer({ onChange, ref }: ProfileViewerProps) {
       setLoading(true)
       try {
         // 基本验证
-        if (!form.type) {
-          throw new Error(t('profiles.modals.profileForm.errors.typeRequired'))
-        }
+        if (!form.type) throw new Error('`Type` should not be null')
         if (form.type === 'remote' && !form.url) {
-          throw new Error(t('profiles.modals.profileForm.errors.urlRequired'))
+          throw new Error('The URL should not be null')
         }
 
         // 处理表单数据
@@ -133,11 +131,7 @@ export function ProfileViewer({ onChange, ref }: ProfileViewerProps) {
           if (openType === 'new') {
             await createProfile(item, fileDataRef.current)
           } else {
-            if (!form.uid) {
-              throw new Error(
-                t('profiles.modals.profileForm.errors.uidMissing'),
-              )
-            }
+            if (!form.uid) throw new Error('UID not found')
             await patchProfile(form.uid, item)
           }
         } else {
@@ -147,11 +141,7 @@ export function ProfileViewer({ onChange, ref }: ProfileViewerProps) {
             if (openType === 'new') {
               await createProfile(item, fileDataRef.current)
             } else {
-              if (!form.uid) {
-                throw new Error(
-                  t('profiles.modals.profileForm.errors.uidMissing'),
-                )
-              }
+              if (!form.uid) throw new Error('UID not found')
               await patchProfile(form.uid, item)
             }
           } catch {
@@ -174,11 +164,7 @@ export function ProfileViewer({ onChange, ref }: ProfileViewerProps) {
             if (openType === 'new') {
               await createProfile(retryItem, fileDataRef.current)
             } else {
-              if (!form.uid) {
-                throw new Error(
-                  t('profiles.modals.profileForm.errors.uidMissing'),
-                )
-              }
+              if (!form.uid) throw new Error('UID not found')
               await patchProfile(form.uid, retryItem)
 
               // 编辑模式下恢复原始代理设置
@@ -201,7 +187,7 @@ export function ProfileViewer({ onChange, ref }: ProfileViewerProps) {
           onChange(isActivating)
         }, 0)
       } catch (err) {
-        showNotice.error('profiles.modals.profileForm.errors.saveFailed', err)
+        showNotice.error(err)
       } finally {
         setLoading(false)
       }
@@ -260,12 +246,8 @@ export function ProfileViewer({ onChange, ref }: ProfileViewerProps) {
               autoFocus
               label={t('profiles.modals.profileForm.fields.type')}
             >
-              <MenuItem value="remote">
-                {t('profiles.modals.profileForm.types.remote')}
-              </MenuItem>
-              <MenuItem value="local">
-                {t('profiles.modals.profileForm.types.local')}
-              </MenuItem>
+              <MenuItem value="remote">Remote</MenuItem>
+              <MenuItem value="local">Local</MenuItem>
             </Select>
           </FormControl>
         )}
@@ -323,7 +305,7 @@ export function ProfileViewer({ onChange, ref }: ProfileViewerProps) {
                 {...text}
                 {...field}
                 placeholder={`clash-verge/v${version}`}
-                label={t('profiles.modals.profileForm.fields.userAgent')}
+                label="User Agent"
               />
             )}
           />

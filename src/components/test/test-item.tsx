@@ -70,8 +70,8 @@ export const TestItem = ({
   })
 
   const menu = [
-    { label: t('shared.actions.edit'), handler: onEditTest },
-    { label: t('shared.actions.delete'), handler: onDelete },
+    { label: 'Edit', handler: onEditTest },
+    { label: 'Delete', handler: onDelete },
   ]
 
   useEffect(() => {
@@ -220,7 +220,7 @@ export const TestItem = ({
             sx={{ minWidth: 120 }}
             dense
           >
-            {item.label}
+            {t(item.label)}
           </MenuItem>
         ))}
       </Menu>

@@ -25,8 +25,7 @@
     },
     "labels": {
       "proxyCount": "Количество прокси",
-      "delayCheckReset": "Сброс проверки задержки",
-      "nodeCount": "Узлов: {{count}}"
+      "delayCheckReset": "Сброс проверки задержки"
     },
     "tooltips": {
       "locate": "Местоположение",
@@ -41,10 +40,6 @@
     },
     "placeholders": {
       "delayCheckUrl": "URL для проверки задержки"
-    },
-    "empty": {
-      "noAvailableGroups": "Нет доступных групп прокси",
-      "noProxies": "Нет прокси"
     },
     "chain": {
       "header": "Цепочка прокси",

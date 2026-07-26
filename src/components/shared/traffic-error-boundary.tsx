@@ -189,10 +189,8 @@ const TrafficErrorFallback: React.FC<TrafficErrorFallbackProps> = ({
 
       <Alert severity="error" sx={{ mb: 2, maxWidth: 400 }}>
         <Typography variant="body2">
-          <strong>{t('shared.feedback.errors.label')}:</strong>{' '}
-          {error instanceof Error
-            ? error.message
-            : t('shared.feedback.errors.unknown')}
+          <strong>Error:</strong>{' '}
+          {error instanceof Error ? error.message : 'Unknown error'}
         </Typography>
         {retryCount > 0 && (
           <Typography variant="caption" sx={{ mt: 1, display: 'block' }}>
@@ -241,7 +239,7 @@ const TrafficErrorFallback: React.FC<TrafficErrorFallbackProps> = ({
           }}
         >
           <Typography variant="subtitle2" gutterBottom>
-            {t('shared.feedback.errors.details')}:
+            Error Details:
           </Typography>
           <Typography
             variant="caption"
@@ -260,7 +258,7 @@ const TrafficErrorFallback: React.FC<TrafficErrorFallbackProps> = ({
           {errorInfo?.componentStack && (
             <>
               <Typography variant="subtitle2" gutterBottom sx={{ mt: 2 }}>
-                {t('shared.feedback.errors.componentStack')}:
+                Component Stack:
               </Typography>
               <Typography
                 variant="caption"
@@ -290,8 +288,6 @@ const TrafficErrorFallback: React.FC<TrafficErrorFallbackProps> = ({
 export const LightweightTrafficErrorBoundary: React.FC<{
   children: ReactNode
 }> = ({ children }) => {
-  const { t } = useTranslation()
-
   return (
     <TrafficErrorBoundary
       fallbackComponent={
@@ -308,9 +304,7 @@ export const LightweightTrafficErrorBoundary: React.FC<{
           }}
         >
           <ErrorOutlineRounded sx={{ mr: 1, fontSize: 20 }} />
-          <Typography variant="caption">
-            {t('shared.feedback.errors.trafficUnavailable')}
-          </Typography>
+          <Typography variant="caption">Traffic data unavailable</Typography>
         </Box>
       }
     >

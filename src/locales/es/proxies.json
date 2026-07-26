@@ -25,8 +25,7 @@
     },
     "labels": {
       "proxyCount": "Número de nodos",
-      "delayCheckReset": "Realizar prueba de latencia para cancelar la fijación",
-      "nodeCount": "{{count}} nodos"
+      "delayCheckReset": "Realizar prueba de latencia para cancelar la fijación"
     },
     "tooltips": {
       "locate": "Nodo actual",
@@ -41,10 +40,6 @@
     },
     "placeholders": {
       "delayCheckUrl": "URL de prueba de latencia"
-    },
-    "empty": {
-      "noAvailableGroups": "No hay grupos de proxy disponibles",
-      "noProxies": "Sin proxies"
     },
     "chain": {
       "header": "Chain Proxy Config",

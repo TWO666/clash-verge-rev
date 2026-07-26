@@ -23,8 +23,7 @@
     "closeAll": "Tümünü Kapat",
     "clear": "Temizle",
     "previous": "Previous",
-    "next": "Next",
-    "check": "Denetle"
+    "next": "Next"
   },
   "labels": {
     "updateAt": "Güncelleme Zamanı",
@@ -45,8 +44,7 @@
     "enabled": "Etkin",
     "disabled": "Devre Dışı",
     "saving": "Saving...",
-    "empty": "Boş",
-    "loading": "Yükleniyor..."
+    "empty": "Boş"
   },
   "units": {
     "milliseconds": "ms",
@@ -76,14 +74,6 @@
   },
   "feedback": {
     "errors": {
-      "unexpected": "Bir şeyler ters gitti",
-      "label": "Hata",
-      "unknown": "Bilinmeyen hata",
-      "details": "Hata ayrıntıları",
-      "stack": "Hata yığını",
-      "componentStack": "Bileşen yığını",
-      "trafficUnavailable": "Trafik verileri kullanılamıyor",
-      "operationFailed": "İşlem başarısız oldu",
       "trafficStats": "Traffic Statistics Error",
       "trafficStatsDescription": "The traffic statistics component encountered an error and has been disabled to prevent crashes."
     },

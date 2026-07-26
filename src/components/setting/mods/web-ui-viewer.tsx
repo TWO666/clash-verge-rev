@@ -74,17 +74,9 @@ export function WebUIViewer({ ref }: { ref?: Ref<DialogRef> }) {
       let url = value.trim().replaceAll('%host', '127.0.0.1')
 
       if (url.includes('%port') || url.includes('%secret')) {
-        if (!clashInfo) {
-          throw new Error(
-            t('settings.modals.webUI.errors.clashInfoUnavailable'),
-          )
-        }
+        if (!clashInfo) throw new Error('failed to get clash info')
         if (!clashInfo.server?.includes(':')) {
-          throw new Error(
-            t('settings.modals.webUI.errors.invalidServer', {
-              server: clashInfo.server,
-            }),
-          )
+          throw new Error(`failed to parse the server "${clashInfo.server}"`)
         }
 
         const port = clashInfo.server
@@ -100,7 +92,7 @@ export function WebUIViewer({ ref }: { ref?: Ref<DialogRef> }) {
 
       await openWebUrl(url)
     } catch (e: any) {
-      showNotice.error('settings.modals.webUI.errors.openFailed', e)
+      showNotice.error(e)
     }
   })
 

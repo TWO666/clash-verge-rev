@@ -25,8 +25,7 @@
     },
     "labels": {
       "proxyCount": "Vekil Sayısı",
-      "delayCheckReset": "Sabit iptali için gecikme kontrolü",
-      "nodeCount": "{{count}} düğüm"
+      "delayCheckReset": "Sabit iptali için gecikme kontrolü"
     },
     "tooltips": {
       "locate": "konum",
@@ -41,10 +40,6 @@
     },
     "placeholders": {
       "delayCheckUrl": "Gecikme kontrol URL'si"
-    },
-    "empty": {
-      "noAvailableGroups": "Kullanılabilir proxy grubu yok",
-      "noProxies": "Proxy yok"
     },
     "chain": {
       "header": "Chain Proxy Config",

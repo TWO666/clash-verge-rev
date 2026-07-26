@@ -45,32 +45,6 @@ const DEFAULT_DURATIONS: Readonly<Record<NoticeType, number>> = {
 }
 
 const TRANSLATION_KEY_PATTERN = /^[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)+$/
-const CODED_ERROR_PATTERN = /^CVR_ERROR:([A-Z0-9_]+)(?:\n([\s\S]*))?$/
-const CODED_ERROR_TRANSLATION_KEYS: Readonly<Record<string, string>> = {
-  CLASH_CONFIG_UPDATE_FAILED:
-    'settings.feedback.errors.clash.configUpdateFailed',
-  CLASH_MODE_UPDATE_FAILED: 'settings.feedback.errors.clash.modeUpdateFailed',
-  CORE_CHANGE_FAILED: 'settings.feedback.notifications.clash.changeFailed',
-  CORE_RESTART_FAILED: 'settings.feedback.errors.clash.restartFailed',
-  CORE_START_FAILED: 'settings.feedback.errors.clash.startFailed',
-  CORE_STOP_FAILED: 'settings.feedback.errors.clash.stopFailed',
-  PROFILE_CREATE_FAILED: 'profiles.page.feedback.errors.createFailed',
-  PROFILE_DELETE_FAILED: 'profiles.page.feedback.errors.deleteFailed',
-  PROFILE_ENHANCE_FAILED: 'profiles.page.feedback.errors.enhanceFailed',
-  PROFILE_IMPORT_FAILED: 'profiles.page.feedback.errors.importFailed',
-  PROFILE_OPEN_FAILED: 'profiles.page.feedback.errors.openFailed',
-  PROFILE_READ_FAILED: 'profiles.page.feedback.errors.readFailed',
-  PROFILE_REORDER_FAILED: 'profiles.page.feedback.errors.reorderFailed',
-  PROFILE_SWITCH_FAILED: 'profiles.page.feedback.errors.switchFailed',
-  PROFILE_UPDATE_FAILED: 'profiles.page.feedback.errors.updateFailed',
-  SERVICE_INSTALL_FAILED: 'settings.feedback.errors.clashService.installFailed',
-  SERVICE_REINSTALL_FAILED:
-    'settings.feedback.errors.clashService.reinstallFailed',
-  SERVICE_REPAIR_FAILED: 'settings.feedback.errors.clashService.repairFailed',
-  SERVICE_SIDECAR_FAILED: 'settings.feedback.errors.clashService.sidecarFailed',
-  SERVICE_UNINSTALL_FAILED:
-    'settings.feedback.errors.clashService.uninstallFailed',
-}
 
 let nextId = 0
 let notices: NoticeItem[] = []
@@ -221,27 +195,12 @@ function extractDisplayText(input: unknown): string | undefined {
   }
 }
 
-function parseCodedError(input?: string) {
-  if (!input) return undefined
-  const match = input.match(CODED_ERROR_PATTERN)
-  if (!match) return undefined
-
-  return {
-    translationKey:
-      CODED_ERROR_TRANSLATION_KEYS[match[1]] ??
-      'shared.feedback.errors.operationFailed',
-    detail: match[2]?.trim(),
-  }
-}
-
 function normalizeNoticeMessage(
   message: NoticeContent,
   params?: Record<string, unknown>,
   raw?: unknown,
 ): { message?: ReactNode; i18n?: NoticeTranslationDescriptor } {
   const rawText = raw !== undefined ? extractDisplayText(raw) : undefined
-  const parsedRawError = parseCodedError(rawText)
-  const rawDetail = parsedRawError?.detail ?? rawText
 
   if (isValidElement(message)) {
     return { message }
@@ -253,7 +212,7 @@ function normalizeNoticeMessage(
       ? { ...originalParams, ...params }
       : { ...originalParams }
 
-    if (rawDetail !== undefined) {
+    if (rawText !== undefined) {
       return {
         i18n: {
           key: 'shared.feedback.notices.prefixedRaw',
@@ -261,7 +220,7 @@ function normalizeNoticeMessage(
             ...mergedParams,
             prefixKey: message.key,
             prefixParams: originalParams,
-            message: rawDetail,
+            message: rawText,
           },
         },
       }
@@ -275,28 +234,8 @@ function normalizeNoticeMessage(
     }
   }
 
-  const parsedMessageError = parseCodedError(extractDisplayText(message))
-  if (parsedMessageError) {
-    if (!parsedMessageError.detail) {
-      return {
-        i18n: {
-          key: parsedMessageError.translationKey,
-        },
-      }
-    }
-    return {
-      i18n: {
-        key: 'shared.feedback.notices.prefixedRaw',
-        params: {
-          prefixKey: parsedMessageError.translationKey,
-          message: parsedMessageError.detail,
-        },
-      },
-    }
-  }
-
   if (typeof message === 'string') {
-    if (rawDetail !== undefined) {
+    if (rawText !== undefined) {
       if (shouldUseTranslationKey(message, params)) {
         return {
           i18n: {
@@ -304,7 +243,7 @@ function normalizeNoticeMessage(
             params: {
               ...(params ?? {}),
               prefixKey: message,
-              message: rawDetail,
+              message: rawText,
             },
           },
         }
@@ -316,7 +255,7 @@ function normalizeNoticeMessage(
           params: {
             ...(params ?? {}),
             prefix: message,
-            message: rawDetail,
+            message: rawText,
           },
         },
       }
@@ -333,8 +272,8 @@ function normalizeNoticeMessage(
     return { i18n: createRawDescriptor(message) }
   }
 
-  if (rawDetail !== undefined) {
-    return { i18n: createRawDescriptor(rawDetail) }
+  if (rawText !== undefined) {
+    return { i18n: createRawDescriptor(rawText) }
   }
 
   const extracted = extractDisplayText(message)

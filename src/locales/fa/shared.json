@@ -23,8 +23,7 @@
     "closeAll": "بستن همه",
     "clear": "پاک کردن",
     "previous": "Previous",
-    "next": "Next",
-    "check": "بررسی"
+    "next": "Next"
   },
   "labels": {
     "updateAt": "به‌روزرسانی در",
@@ -45,8 +44,7 @@
     "enabled": "توانایی فعال شد",
     "disabled": "غیرفعال شد",
     "saving": "Saving...",
-    "empty": "خالی خالی",
-    "loading": "در حال بارگذاری..."
+    "empty": "خالی خالی"
   },
   "units": {
     "milliseconds": "میلی‌ثانیه",
@@ -76,14 +74,6 @@
   },
   "feedback": {
     "errors": {
-      "unexpected": "مشکلی پیش آمد",
-      "label": "خطا",
-      "unknown": "خطای نامشخص",
-      "details": "جزئیات خطا",
-      "stack": "پشته خطا",
-      "componentStack": "پشته مؤلفه",
-      "trafficUnavailable": "داده‌های ترافیک در دسترس نیست",
-      "operationFailed": "عملیات ناموفق بود",
       "trafficStats": "Traffic Statistics Error",
       "trafficStatsDescription": "The traffic statistics component encountered an error and has been disabled to prevent crashes."
     },

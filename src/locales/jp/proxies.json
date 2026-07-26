@@ -25,8 +25,7 @@
     },
     "labels": {
       "proxyCount": "ノード数",
-      "delayCheckReset": "遅延テストを実行して固定を解除する",
-      "nodeCount": "{{count}} ノード"
+      "delayCheckReset": "遅延テストを実行して固定を解除する"
     },
     "tooltips": {
       "locate": "現在のノード",
@@ -41,10 +40,6 @@
     },
     "placeholders": {
       "delayCheckUrl": "遅延テストURL"
-    },
-    "empty": {
-      "noAvailableGroups": "利用可能なプロキシグループがありません",
-      "noProxies": "プロキシがありません"
     },
     "chain": {
       "header": "Chain Proxy Config",

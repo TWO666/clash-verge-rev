@@ -183,7 +183,7 @@ export const ProxyItemMini = (props: Props) => {
               ':hover': { bgcolor: alpha(palette.primary.main, 0.15) },
             })}
           >
-            {t('shared.actions.check')}
+            Check
           </Widget>
         )}
 
