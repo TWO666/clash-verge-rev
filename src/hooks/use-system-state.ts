@@ -16,14 +16,14 @@ import { useVisibility } from './use-visibility'
 export interface SystemState {
   runningMode: RunningMode
   isAdminMode: boolean
-  isServiceInstallReady: boolean
+  isServiceOk: boolean
   serviceInstallState: ServiceInstallState | null
 }
 
 const defaultSystemState = {
   runningMode: 'Sidecar',
   isAdminMode: false,
-  isServiceInstallReady: false,
+  isServiceOk: false,
   serviceInstallState: null,
 } as SystemState
 
@@ -36,19 +36,19 @@ export const fetchSystemState = async (): Promise<SystemState> => {
   return {
     runningMode,
     isAdminMode,
-    isServiceInstallReady: serviceInstallState === 'ready',
+    isServiceOk: serviceInstallState === 'ready',
     serviceInstallState,
   }
 }
 
 const isServiceChoicePending = (
   state: ServiceInstallState | null,
-  serviceInstallReady: boolean,
+  serviceAvailable: boolean,
   queryFailed: boolean,
 ) =>
   queryFailed ||
   state === 'sidecarAllowed' ||
-  !(state === 'notInstalled' || (state === 'ready' && serviceInstallReady))
+  !(state === 'notInstalled' || (state === 'ready' && serviceAvailable))
 
 // Grace period for service initialization during startup
 const STARTUP_GRACE_MS = 10_000
@@ -81,18 +81,17 @@ export function useSystemState() {
 
   const isSidecarMode = systemState.runningMode === 'Sidecar'
   const isServiceMode = systemState.runningMode === 'Service'
-  const isTunModeAvailable =
-    systemState.isAdminMode || systemState.isServiceInstallReady
+  const isTunModeAvailable = systemState.isAdminMode || systemState.isServiceOk
   const serviceChoicePending = isServiceChoicePending(
     systemState.serviceInstallState,
-    systemState.isServiceInstallReady,
+    systemState.isServiceOk,
     systemStateError !== undefined,
   )
 
   return {
     runningMode: systemState.runningMode,
     isAdminMode: systemState.isAdminMode,
-    isServiceInstallReady: systemState.isServiceInstallReady,
+    isServiceOk: systemState.isServiceOk,
     isSidecarMode,
     isServiceMode,
     isTunModeAvailable,

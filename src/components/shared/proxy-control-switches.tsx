@@ -135,7 +135,7 @@ const ProxyControlSwitches = ({
   const { uninstallServiceAndStartSidecar } = useServiceUninstaller()
   const { indicator: systemProxyIndicator, toggleSystemProxy } =
     useSystemProxyState()
-  const { isServiceInstallReady, isTunModeAvailable, mutateSystemState } =
+  const { isServiceOk, isTunModeAvailable, mutateSystemState } =
     useSystemState()
 
   const sysproxyRef = useRef<DialogRef>(null)
@@ -225,7 +225,7 @@ const ProxyControlSwitches = ({
                   />
                 </>
               )}
-              {isServiceInstallReady && (
+              {isServiceOk && (
                 <TooltipIcon
                   title={t(
                     'settings.sections.proxyControl.actions.uninstallService',
