@@ -60,7 +60,6 @@ export const AppDataProvider = ({
 
   const {
     data: proxyView,
-    error: proxyViewError,
     isPending: isProxyViewPending,
     refetch: _refetchProxyView,
   } = useQuery({
@@ -100,7 +99,7 @@ export const AppDataProvider = ({
     ...TQ_DEFAULTS,
   })
 
-  const { data: runningMode, isPending: isRunningModePending } = useQuery({
+  const { data: runningMode } = useQuery({
     queryKey: ['getRunningMode'],
     queryFn: getRunningMode,
     ...TQ_DEFAULTS,
@@ -217,9 +216,8 @@ export const AppDataProvider = ({
     () => ({
       proxyView,
       isProxyViewPending,
-      isProxyViewError: Boolean(proxyViewError),
     }),
-    [proxyView, isProxyViewPending, proxyViewError],
+    [proxyView, isProxyViewPending],
   )
 
   const rulesValue = useMemo(
@@ -275,18 +273,9 @@ export const AppDataProvider = ({
     return {
       sysproxy,
       runningMode,
-      isRunningModePending,
       systemProxyAddress: calculateSystemProxyAddress(),
     }
-  }, [
-    sysproxy,
-    runningMode,
-    isRunningModePending,
-    verge,
-    clashConfig,
-    runtimeConfig,
-    clashInfo,
-  ])
+  }, [sysproxy, runningMode, verge, clashConfig, runtimeConfig, clashInfo])
 
   const uptimeValue = useMemo(() => ({ uptime: uptimeData || 0 }), [uptimeData])
 

@@ -6,7 +6,6 @@ import type { ProxyViewV1 } from '@/types/proxy-view'
 export interface ProxiesContextType {
   proxyView: ProxyViewV1 | undefined
   isProxyViewPending: boolean
-  isProxyViewError: boolean
 }
 
 export interface RulesContextType {
@@ -22,7 +21,6 @@ export interface ClashConfigContextType {
 export interface SystemContextType {
   sysproxy: any
   runningMode?: string
-  isRunningModePending: boolean
   systemProxyAddress: string
 }
 
