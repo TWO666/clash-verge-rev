@@ -89,18 +89,6 @@ export const handleNoticeMessage = (
         'settings.feedback.notifications.clash.changeFailed',
         msg,
       ),
-    'mixed_port::fallback': () => {
-      const [oldPort, newPort] = msg.split(',')
-      showNotice.info('settings.modals.clashPort.messages.automaticFallback', {
-        oldPort,
-        newPort,
-      })
-    },
-    'mixed_port::fallback_error': () =>
-      showNotice.error(
-        'settings.modals.clashPort.messages.automaticFallbackFailed',
-        { error: msg },
-      ),
   }
 
   const handler = handlers[status]

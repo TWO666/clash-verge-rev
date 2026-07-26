@@ -32,7 +32,6 @@ import {
   TooltipIcon,
 } from '@/components/base'
 import { EditorViewer } from '@/components/profile/editor-viewer'
-import { useDisplayedMixedPort } from '@/hooks/use-displayed-mixed-port'
 import { useSystemProxyState } from '@/hooks/use-system-proxy-state'
 import { useVerge } from '@/hooks/use-verge'
 import { useClashConfigData, useSystemData } from '@/providers/app-data-context'
@@ -189,19 +188,27 @@ export const SysproxyViewer = forwardRef<DialogRef>((props, ref) => {
   }, [clashConfig?.mixedPort, enabled, value.pac, invalidateProxyState])
 
   const { systemProxyAddress } = useSystemData()
-  const displayedMixedPort = useDisplayedMixedPort()
 
   // 为当前状态计算系统代理地址
   const getSystemProxyAddress = useMemo(() => {
+    if (!clashConfig) return '-'
+
     const isPacMode = value.pac ?? false
 
     if (isPacMode) {
       const host = value.proxy_host || '127.0.0.1'
-      return `${host}:${displayedMixedPort}`
+      const port = verge?.verge_mixed_port || clashConfig.mixedPort || 7897
+      return `${host}:${port}`
     } else {
       return systemProxyAddress
     }
-  }, [value.pac, value.proxy_host, displayedMixedPort, systemProxyAddress])
+  }, [
+    value.pac,
+    value.proxy_host,
+    verge?.verge_mixed_port,
+    clashConfig,
+    systemProxyAddress,
+  ])
   const getCurrentPacUrl = useMemo(() => {
     const host = value.proxy_host || '127.0.0.1'
     return embeddedServerPort
@@ -370,7 +377,7 @@ export const SysproxyViewer = forwardRef<DialogRef>((props, ref) => {
     if (pacContent) {
       pacContent = pacContent.replace(/%proxy_host%/g, value.proxy_host)
       // 将 mixed-port 转换为字符串
-      const mixedPortStr = displayedMixedPort.toString()
+      const mixedPortStr = (clashConfig?.mixedPort || '').toString()
       pacContent = pacContent.replace(/%mixed-port%/g, mixedPortStr)
     }
 
