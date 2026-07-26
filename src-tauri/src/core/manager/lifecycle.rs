@@ -567,7 +567,7 @@ impl CoreManager {
 
     #[cfg(target_os = "windows")]
     async fn wait_for_service_if_needed(&self) {
-        use crate::{config::Config, constants::timing};
+        use crate::{config::Config, constants::timing, core::service};
         use backon::{ConstantBuilder, Retryable as _};
 
         let tun_enabled = Config::verge().await.latest_arc().enable_tun_mode.unwrap_or(false);
@@ -590,17 +590,28 @@ impl CoreManager {
             .with_delay(timing::SERVICE_WAIT_INTERVAL)
             .with_max_times(max_times as usize);
 
-        let wait_for_ready = (|| async {
-            if SERVICE_MANAGER.is_ready_cached() {
+        let _ = (|| async {
+            if matches!(SERVICE_MANAGER.current().await, ServiceStatus::Ready) {
                 return Ok(());
             }
 
-            // Probe the service directly. A transient transport failure does not overwrite
-            // the last confirmed install state and is retried within the startup deadline.
-            SERVICE_MANAGER.confirm_ready().await
+            // If the service IPC path is not ready yet, treat it as transient and retry.
+            // Running init/refresh too early can mark service state unavailable and break later config reloads.
+            if !service::is_service_ipc_path_exists() {
+                return Err(anyhow::anyhow!("Service IPC not ready"));
+            }
+
+            SERVICE_MANAGER.init().await?;
+            let _ = SERVICE_MANAGER.refresh().await;
+
+            if matches!(SERVICE_MANAGER.current().await, ServiceStatus::Ready) {
+                Ok(())
+            } else {
+                Err(anyhow::anyhow!("Service not ready"))
+            }
         })
-        .retry(backoff);
-        let _ = tokio::time::timeout(timing::SERVICE_WAIT_MAX, wait_for_ready).await;
+        .retry(backoff)
+        .await;
     }
 
     /// 在窗口内等待服务就绪,再从 sidecar 交接到 service
@@ -664,11 +675,17 @@ impl CoreManager {
 
     #[cfg(target_os = "windows")]
     async fn refresh_service_readiness_for_handoff() -> bool {
+        use crate::core::service;
+
         // 主动刷新服务状态,避免缓存状态阻止交接
-        if SERVICE_MANAGER.confirm_ready().await.is_err() {
+        if !service::is_service_ipc_path_exists() {
             return false;
         }
-        SERVICE_MANAGER.is_ready_cached()
+        if SERVICE_MANAGER.init().await.is_err() {
+            return false;
+        }
+        let _ = SERVICE_MANAGER.refresh().await;
+        matches!(SERVICE_MANAGER.current().await, ServiceStatus::Ready)
     }
 
     /// 服务就绪后停止 sidecar,再以 service 重启内核

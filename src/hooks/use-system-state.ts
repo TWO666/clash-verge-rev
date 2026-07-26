@@ -4,6 +4,7 @@ import {
   getRunningMode,
   getServiceInstallState,
   isAdmin,
+  isServiceAvailable,
   type RunningMode,
   type ServiceInstallState,
 } from '@/services/cmds'
@@ -28,15 +29,17 @@ const defaultSystemState = {
 } as SystemState
 
 export const fetchSystemState = async (): Promise<SystemState> => {
-  const [runningMode, isAdminMode, serviceInstallState] = await Promise.all([
-    getRunningMode(),
-    isAdmin(),
-    getServiceInstallState().catch(() => null),
-  ])
+  const [runningMode, isAdminMode, isServiceOk, serviceInstallState] =
+    await Promise.all([
+      getRunningMode(),
+      isAdmin(),
+      isServiceAvailable(),
+      getServiceInstallState().catch(() => null),
+    ])
   return {
     runningMode,
     isAdminMode,
-    isServiceOk: serviceInstallState === 'ready',
+    isServiceOk,
     serviceInstallState,
   }
 }
