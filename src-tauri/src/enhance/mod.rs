@@ -132,7 +132,7 @@ async fn get_config_values(profile_uid: &str) -> ConfigValues {
         enable_builtin_enhanced.unwrap_or(true),
         verge_socks_enabled.unwrap_or(false),
         verge_http_enabled.unwrap_or(false),
-        dns_settings.enabled,
+        false,
     );
 
     #[cfg(not(target_os = "windows"))]

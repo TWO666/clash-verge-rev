@@ -1,17 +1,14 @@
 import { LanRounded, SettingsRounded } from '@mui/icons-material'
 import { MenuItem, Select, TextField, Typography } from '@mui/material'
-import { useLockFn } from 'ahooks'
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { updateGeo, type LogLevel } from 'tauri-plugin-mihomo-api'
 
-import { BaseDialog, DialogRef, Switch, TooltipIcon } from '@/components/base'
+import { DialogRef, Switch, TooltipIcon } from '@/components/base'
 import { useClash } from '@/hooks/use-clash'
 import { useClashLog } from '@/hooks/use-clash-log'
 import { useDisplayedMixedPort } from '@/hooks/use-displayed-mixed-port'
-import { useProfiles } from '@/hooks/use-profiles'
-import { useVerge } from '@/hooks/use-verge'
-import { invoke_uwp_tool, setDnsOverride } from '@/services/cmds'
+import { invoke_uwp_tool } from '@/services/cmds'
 import { mutate } from '@/services/mutate'
 import { showNotice } from '@/services/notice-service'
 import getSystem from '@/utils/get-system'
@@ -19,7 +16,6 @@ import getSystem from '@/utils/get-system'
 import { ClashCoreViewer } from './mods/clash-core-viewer'
 import { ClashPortViewer } from './mods/clash-port-viewer'
 import { ControllerViewer } from './mods/controller-viewer'
-import { DnsViewer } from './mods/dns-viewer'
 import { HeaderConfiguration } from './mods/external-controller-cors'
 import { GuardState } from './mods/guard-state'
 import { NetworkInterfaceViewer } from './mods/network-interface-viewer'
@@ -37,13 +33,6 @@ const SettingClash = ({ onError }: Props) => {
   const { t } = useTranslation()
 
   const { clash, version, mutateClash, patchClash } = useClash()
-  const { verge, mutateVerge } = useVerge()
-  const { current: currentProfile } = useProfiles()
-  const dnsEnabled = currentProfile
-    ? (verge?.profile_dns_settings?.[currentProfile.uid!]?.enabled ??
-      verge?.enable_dns_settings ??
-      false)
-    : false
   const displayedMixedPort = useDisplayedMixedPort()
   const [, setClashLog] = useClashLog()
 
@@ -54,18 +43,11 @@ const SettingClash = ({ onError }: Props) => {
     'unified-delay': unifiedDelay,
   } = clash ?? {}
 
-  const [dnsConfirmation, setDnsConfirmation] = useState<{
-    profileUid: string
-    source: string
-  } | null>(null)
-  const [dnsUpdating, setDnsUpdating] = useState(false)
-
   const webRef = useRef<DialogRef>(null)
   const portRef = useRef<DialogRef>(null)
   const ctrlRef = useRef<DialogRef>(null)
   const coreRef = useRef<DialogRef>(null)
   const networkRef = useRef<DialogRef>(null)
-  const dnsRef = useRef<DialogRef>(null)
   const corsRef = useRef<DialogRef>(null)
   const tunnelRef = useRef<DialogRef>(null)
 
@@ -85,43 +67,6 @@ const SettingClash = ({ onError }: Props) => {
     }
   }
 
-  const handleDnsToggle = useLockFn(
-    async (
-      enable: boolean,
-      confirmation?: string,
-      profileUid = currentProfile?.uid,
-    ) => {
-      if (!profileUid) return
-      setDnsUpdating(true)
-      try {
-        const result = await mutate(
-          () => setDnsOverride(profileUid, enable, confirmation),
-          {
-            id: 'set-dns-override',
-            errorNotice: false,
-          },
-        )
-        if (!result.ok) return
-        const outcome = result.value
-        if (outcome.status === 'confirmation_required') {
-          setDnsConfirmation({ profileUid, source: outcome.source })
-        } else {
-          setDnsConfirmation(null)
-        }
-        mutateVerge()
-        mutateClash()
-      } catch (err: any) {
-        showNotice.error(err)
-      } finally {
-        setDnsUpdating(false)
-      }
-    },
-  )
-
-  const closeDnsConfirmation = () => {
-    if (!dnsUpdating) setDnsConfirmation(null)
-  }
-
   return (
     <SettingList title={t('settings.sections.clash.title')}>
       <WebUIViewer ref={webRef} />
@@ -129,30 +74,6 @@ const SettingClash = ({ onError }: Props) => {
       <ControllerViewer ref={ctrlRef} />
       <ClashCoreViewer ref={coreRef} />
       <NetworkInterfaceViewer ref={networkRef} />
-      <DnsViewer ref={dnsRef} />
-      <BaseDialog
-        open={dnsConfirmation !== null}
-        title={t('settings.modals.dns.protection.title')}
-        okBtn={t('settings.modals.dns.protection.enableAnyway')}
-        cancelBtn={t('settings.modals.dns.protection.keepDisabled')}
-        contentSx={{ width: { xs: 320, sm: 420 } }}
-        loading={dnsUpdating}
-        disableCancel={dnsUpdating}
-        onCancel={closeDnsConfirmation}
-        onClose={closeDnsConfirmation}
-        onOk={() => {
-          if (dnsConfirmation)
-            void handleDnsToggle(
-              true,
-              dnsConfirmation.source,
-              dnsConfirmation.profileUid,
-            )
-        }}
-      >
-        <Typography variant="body2">
-          {t('settings.modals.dns.protection.message')}
-        </Typography>
-      </BaseDialog>
       <HeaderConfiguration ref={corsRef} />
       <TunnelsViewer ref={tunnelRef} />
       <SettingItem
@@ -178,29 +99,6 @@ const SettingClash = ({ onError }: Props) => {
         >
           <Switch edge="end" />
         </GuardState>
-      </SettingItem>
-
-      <SettingItem
-        label={t('settings.sections.clash.form.fields.dnsOverwrite')}
-        extra={
-          <>
-            <TooltipIcon
-              icon={SettingsRounded}
-              onClick={() => dnsRef.current?.open()}
-            />
-            <TooltipIcon
-              title={t('settings.modals.dns.dialog.profileScope')}
-              sx={{ opacity: '0.7' }}
-            />
-          </>
-        }
-      >
-        <Switch
-          edge="end"
-          checked={dnsEnabled}
-          disabled={!currentProfile || dnsUpdating || dnsConfirmation !== null}
-          onChange={(_, checked) => handleDnsToggle(checked)}
-        />
       </SettingItem>
 
       <SettingItem label={t('settings.sections.clash.form.fields.ipv6')}>
