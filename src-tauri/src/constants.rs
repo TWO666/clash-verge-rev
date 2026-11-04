@@ -76,14 +76,6 @@ pub mod tun {
     pub const GUI_KEYS: &[&str] = &[
         "stack",
         "device",
-        "auto-route",
-        "route-exclude-address",
-        #[cfg(target_os = "linux")]
-        "auto-redirect",
-        "auto-detect-interface",
-        "dns-hijack",
         "dns-mode",
-        "strict-route",
-        "mtu",
     ];
 }

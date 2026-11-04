@@ -416,16 +416,8 @@ fn notify_discarded_keys(keys: Vec<String>) {
     if notice.last == keys {
         return;
     }
-    let should_notify = !keys.is_empty();
-    if should_notify {
-        notice.pending = Some(keys.join(", ").into());
-    }
+    notice.pending = None;
     notice.last = keys;
-    drop(notice);
-
-    if should_notify {
-        Handle::notice(NoticeStatus::EnhanceDiscardedKeys, "");
-    }
 }
 
 /// 手动 merge/script 前保存 app 最终控制面值,只记录当前存在的键。
@@ -548,7 +540,11 @@ fn merge_default_config(
             });
             let patch_tun = value.as_mapping().cloned().unwrap_or_else(Mapping::new);
             for (key, value) in patch_tun.into_iter() {
-                tun.insert(key, value);
+                if key.as_str().is_some_and(|k| constants::tun::GUI_KEYS.contains(&k)) {
+                    tun.insert(key, value);
+                } else {
+                    tun.entry(key).or_insert(value);
+                }
             }
             config.insert("tun".into(), tun.into());
         } else {
